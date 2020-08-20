@@ -1,0 +1,21 @@
+---
+Title: "Lab 02 Results" 
+Name: "Jovany Cota"
+Author: Jovany Cota 
+Subtitle: " GEOG 176A Summer Session B 2020"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:  html_document
+---
+
+## Question 1
+
+Based on my findings, I found that Los Angeles had the most cumulative cases in CA counties with 223,031 cases while, also, being first for having the most new COVID-19 cases in CA counties with 223,328 cases daily. Finally, I have concluded the following counties to be safe based on their low Total Cases Per Capita: Kalawao, Loving, Kenedy, Arthur, and Petroleum.
+
+## Question 2
+
+Implementing the population as scale has a deep impact on the results because not every State has the same number of population; some have more, some have less. This makes a few States to standout. For example, Louisiana stands out because it is skewed to the left and and skewed to the right, as well, with a gap in the middle. This was due to the population being much less than the others, putting them side by side with a free scale.  
+
+
+
+
+
