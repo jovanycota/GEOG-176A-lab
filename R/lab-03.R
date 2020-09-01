@@ -235,10 +235,13 @@ within_range = cities %>%
   mutate(close_by = dist_state < city_range) %>%
   filter(close_by == TRUE)
 
+<<<<<<< HEAD
 closer_by = dist_state < city_range
 
 (closer_by)
 
+=======
+>>>>>>> 44f349cb4a69ceb61ccef16c539fffed69206a2f
 pop_within_range = cities %>%
   mutate(dist_state) %>%
   select(city, state_name, dist_state, population) %>%
