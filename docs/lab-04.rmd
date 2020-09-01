@@ -170,7 +170,7 @@ For the Voroni Tesselation, the total area is massive so it might affect it's fi
 
 # Question 3
 
-```{r, echo= FALSE, warning= FALSE}
+```{r, echo= FALSE, warning= FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
