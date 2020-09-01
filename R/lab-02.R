@@ -110,6 +110,34 @@ specific_sates %>%
          caption = "2020 Summer Session B for GEOG 176A",
          subtitle = "COVID-19 Data: NY-Times")
 
+nc_tc = covid %>%
+    right_join(pop_filter, by = "fips") %>%
+    filter(state.x %in% c('California', 'New York', 'Louisiana', 'Florida')) %>%
+    select(date, state.x, cases, pop2019) %>%
+    group_by(date,state.x, pop2019) %>%
+    summarise(cases = sum(cases)) %>%
+    group_by(state.x) %>%
+    mutate(newCases = cases - lag(cases)) %>%
+    mutate(tot14 = sum(newCases, na.rm =TRUE) / pop2019) %>%
+    mutate(roll7 = rollmean(tot14, 7, fill = NA, align="right"))
+
+
+nc_tc %>%
+    ggplot(aes(x = date , y = tot14)) +
+    geom_col(aes(y = tot14), fill = "yellow", col = NA) +
+    geom_line(aes(y = roll7), col = "blue", size = .5) +
+    facet_wrap(~state.x, scale = "free_y") +
+    ggthemes::theme_gdocs() +
+    theme(legend.position = "none") +
+    labs(title = "COVID-19 Cases Per Capita at the State Level",
+         x = "Date",
+         y = "Cases Per Capita",
+         caption = "2020 Summer Session B for GEOG 176A",
+         subtitle = "COVID-19 Data: NY-Times")
+
+
+
+
 
 
 
