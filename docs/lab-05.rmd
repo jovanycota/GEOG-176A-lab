@@ -1,0 +1,301 @@
+---
+title: "Lab 05"
+author: "[Jovany Cota](https://github.com/jovanycota)"
+subtitle: 'GEOG 176A'
+output:
+  html_document:
+    theme: journal
+---
+
+# Question 1
+
+```{r, warning=FALSE, message=FALSE}
+library(raster)
+library(sf)
+library(tidyverse)
+library(mapview)
+
+cities = read.csv("../data/uscities.csv")
+
+aoi = cities %>% 
+  filter(city == "Palo") %>% 
+  st_as_sf(coords = c("lng", "lat"), crs = 4326) %>% 
+  st_transform(5070) %>% 
+  st_buffer(5000) %>% 
+  st_bbox() %>% 
+  st_as_sfc() %>% 
+  st_as_sf()
+
+bbwgs = aoi %>% 
+  st_transform(4326)
+
+bb = st_bbox(bbwgs)
+
+
+```
+
+
+# Question 2
+
+
+```{r, warning=FALSE, message=FALSE}
+library(raster)
+library(sf)
+library(tidyverse)
+library(getlandsat)
+
+meta = read_csv("../data/palo-flood.csv")
+
+files = lsat_scene_files(meta$download_url) %>% 
+  filter(grepl(paste0("B", 1:6, ".TIF$", collapse = "|"), file)) %>% 
+  arrange(file) %>% 
+  pull(file)
+
+st = sapply(files, lsat_image)
+
+s = stack(st) %>% 
+  setNames(c(paste0("band", 1:6)))
+
+cropper = bbwgs %>% 
+  st_transform(crs(s))
+
+r = crop(s, cropper)
+
+```
+
+- What are the dimensions of your stacked image? What is the CRS? What is the cell resolution?
+The dimensions are: nrow = 7811, ncol = 7681, ncell = 59996291, nlayers = 6
+The CRS is WGS84 while the resolution is 30 x 30
+
+- What are the dimensions of your cropped image stack? What is the CRS? What is the cell resolution?
+The dimensions are: nrow = 340, ncol = 346, ncell = 117640, nlayers = 6
+The CRS is still WGS84 while the resolution remains the same at 30 x 30
+
+
+
+
+
+# Question 3
+
+
+```{r, warning=FALSE, message=FALSE}
+library(raster)
+library(sf)
+library(tidyverse)
+library(getlandsat)
+
+# step 1
+
+par(mfrow = c(2,2))
+plotRGB(r, r = 4, g = 3, b = 2)
+plotRGB(r, r = 5, g = 4, b = 3)
+plotRGB(r, r = 5, g = 6, b = 4)
+plotRGB(r, r = 7, g = 6, b = 4)
+
+# step 2
+par(mfrow = c(2,2))
+plotRGB(r, r = 4, g = 3, b = 2, stretch = "lin")
+plotRGB(r, r = 5, g = 4, b = 3, stretch = "hist")
+plotRGB(r, r = 5, g = 6, b = 4, stretch = "lin")
+plotRGB(r, r = 7, g = 6, b = 4, stretch = "hist")
+```
+
+
+- Describe the purpsoe of applying a color stretch.
+
+A color stretch helps to identify features within the image. For example, it can show vegetation, land, bodies of water, etc..
+
+
+# Question 4
+
+
+```{r, warning=FALSE, message=FALSE}
+library(raster)
+library(sf)
+library(tidyverse)
+library(getlandsat)
+
+# step 1
+
+ndvi = (r$band5 - r$band4) / (r$band5 + r$band4)
+
+ndwi = (r$band3 - r$band5) / (r$band3 + r$band5)
+
+mndwi = (r$band3 - r$band6) / (r$band3 + r$band6)
+
+wri = (r$band3 + r$band4) / (r$band5 + r$band6)
+
+swi = 1 / sqrt((r$band2 - r$band6))
+
+r_stack = stack(ndvi, ndwi, mndwi, wri, swi) %>% 
+  setNames(c("ndvi", "ndwi", "mndwi", "wri", "swi"))
+
+# palette
+
+palet = colorRampPalette(c("blue", "white", "red"))
+
+# plot stack
+
+plot(r_stack, col = palet(256))
+
+# step 2
+
+thres_less = function(x) {
+  ifelse(x < 0, 1, 0)
+}
+
+thres_great = function(x) {
+  ifelse(x > 0, 1, 0)
+}
+
+thres_one = function(x) {
+  ifelse(x > 1, 1, 0)
+}
+
+thres_five = function(x) {
+  ifelse(x < 5, 1, 0)
+}
+
+
+flood_ndvi = calc(ndvi, thres_less)
+
+flood_ndwi = calc(ndwi, thres_great)
+
+flood_mndwi = calc(mndwi, thres_great)
+
+flood_wri = calc(wri, thres_one)
+
+flood_swi = calc(swi, thres_five)
+
+# stack 
+
+stack_flood = stack(flood_ndvi, flood_mndwi, flood_ndwi, flood_swi, flood_wri) %>% 
+  setNames(c("ndvi", "mndwi", "ndwi", "swi", "wri"))
+
+pale = colorRampPalette("blue")
+
+plot(stack_flood, col = c('white', 'blue'))
+```
+
+- Describe the 5 images. How are they simular and where do they deviate?
+The five images all display the flooded area in their own way by highlighting important aspects of it and they all display the flooded area. They are different due to the type of data they choose to showcase alongside the flooded area.
+
+# Question 5
+
+```{r, warning=FALSE, message=FALSE}
+library(raster)
+library(sf)
+library(tidyverse)
+library(getlandsat)
+library(stats)
+
+# step 1
+sflood = stack_flood
+
+
+# step 2
+
+values = getValues(r)
+
+dim(values)
+
+idx = which(!is.na(values))
+
+v = na.omit(values)
+
+vs = scale(v)
+
+E = kmeans(vs, 12, iter.max = 100)
+
+clus_raster = r$band1
+
+values(clus_raster) = E$cluster
+
+e_z = kmeans(vs, 6, iter.max = 100)
+
+c_r = r$band1
+
+values(c_r) = NA
+
+c_r[idx] <- e_z$cluster
+
+# step 3
+
+ndvi_values = getValues(flood_ndvi)
+
+cr_values = getValues(clus_raster)
+
+tt = table(ndvi_values, cr_values)
+
+vmax = which.max(tt[2,])
+
+fun = function(x) {
+  ifelse(x == 11, 1, 0)
+}
+
+tt_c = calc(clus_raster, fun)
+
+
+nl_sf = stack_flood %>% 
+  addLayer(tt_c)
+
+
+```
+
+- What do the diminsions of the extracted values tell you about how the data was extracted?
+The dimensions tells us that the data was extracted using their extent. It also tells us that we can not use a raster for the situation so we had to extract the values onto a new object to use.
+
+
+
+
+
+# Question 6
+
+```{r, warning=FALSE, message=FALSE}
+library(raster)
+library(sf)
+library(tidyverse)
+library(getlandsat)
+library(stats)
+library(knitr)
+library(leaflet)
+
+# first
+
+later = cellStats(nl_sf, sum)
+
+ar = 900
+
+later_area = later * ar
+
+knitr::kable(later_area, caption = "Total Area",
+             col.names = "Total")
+
+# second
+
+sum_late = calc(nl_sf, sum)
+
+plot(sum_late, col = blues9)
+
+# third
+
+other_sum = sum_late
+
+full = function(x) {
+  ifelse(x <= 0, NA, 1)
+}
+
+almost = calc(other_sum, full)
+
+leaflet(data = almost) %>% 
+  addProviderTiles(providers$CartoDB)
+
+
+
+
+
+
+```
+
+- Why are some of the cell values not an even number?
+Some of the cells are not an even number due to their total area of sum.
