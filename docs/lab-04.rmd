@@ -1,15 +1,18 @@
 ---
 title: "Lab 04: Tesselations, Point-in-Polygon"
 author: "[Jovany Cota](https://github.com/jovanycota)"
-subtitle: 'GEOG 176A'
+subtitle: 'GEOG 176A Summer Session B 2020'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     theme: journal
 ---
 
-# Question 1
 
-```{r, echo=FALSE}
+## Question 1
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -76,10 +79,11 @@ hex_grid = st_make_grid(conus_counties, n = c(70, 50), square = FALSE) %>%
 
 Simplifying the grids reduced the points drastically. For example, for counties, the total amount of points went from 3229 to 161.
 
-# Question 1: Plots
+
+## Question 1: Plots
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -102,10 +106,10 @@ plot_tess(conus_counties, "Counties")
 ```
 
 
-# Question 2.1-2.2
+## Question 2.1-2.2
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -139,10 +143,10 @@ sum_tess(sf_object = conus_counties, "counties")
 ```
 
 
-# Question 2.3-2.5
+## Question 2.3-2.5
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -168,9 +172,10 @@ For the Voroni Tesselation, the total area is massive so it might affect it's fi
 
 
 
-# Question 3
+## Question 3
 
-```{r, echo= FALSE, warning= FALSE, message=FALSE}
+
+```{r, warning= FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -228,9 +233,10 @@ plot_peep = function(object_sf, title) {
 ```
 
 
-# Question 3: Plots
+## Question 3: Plots
 
-```{r}
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -253,9 +259,10 @@ plot_peep(conus_peep, "U.S. Counties: Dams")
 This relates the MAUP problem because each graph displays the same data in its own right. Meaning, each graph highlights and displays a standout factor in the data. I would choose the triangulation grid because of the amount of detail that comes with it.
 
 
-# Question 4
+## Question 4
 
-```{r}
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)
@@ -291,9 +298,10 @@ dam_fad_hex = peep(dam_fad, hex_grid, "id")
 I chose recreation as a purpose because I am curious to think how many dams there are available for our recreational use. Also, I chose wildlife and fishes because I would think that would be the only purpose for dams. On another note, I chose protection as a purpose because I was curious at the distribution of dams meant for the use of proection. Finally, I chose water supply as a purpose because I would think we would not be in a drought with all these dams but I was wrong.
 
 
-# Question 4: Plots
+## Question 4: Plots
 
-```{r}
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(rmapshaper)

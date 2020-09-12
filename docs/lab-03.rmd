@@ -1,14 +1,17 @@
 ---
 title: "Lab 03: Distances and the Border Zone"
 author: "[Jovany Cota](https://github.com/jovanycota)"
-subtitle: 'GEOG 176A'
+subtitle: 'GEOG 176A Summer Session B 2020'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     theme: journal
 ---
-# Question 1
 
-```{r}
+## Question 1
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -36,9 +39,12 @@ cities = readr::read_csv("../data/uscities.csv") %>%
   filter(!state_name %in% c("Hawaii", "Puerto Rico", "Alaska")) %>%
   st_transform(eqdc)
 ```
-# Question 2.1 Distance to USA border in km
 
-```{r}
+
+## Question 2.1 Distance to USA border in km
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -72,9 +78,11 @@ knitr::kable(five_city_border, caption = "The 5 Furthest USA Cities to the USA B
              col.names = c("City", "State", "Distance to Border", ""))
 ```
 
-# Question 2.2 Distance to States
 
-```{r}
+## Question 2.2 Distance to States
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -108,9 +116,11 @@ knitr::kable(five_city_state, caption = "The 5 Furthest USA Cities to a  State B
              col.names = c("City", "State", "Distance", ""))
 ```
 
-# Question 2.3 Distance to Mexico
 
-```{r}
+## Question 2.3 Distance to Mexico
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -136,9 +146,11 @@ knitr::kable(city_mex, caption = "The 5 Furthest USA Cities to the Mexico Border
              col.names = c("City", "State", "Distace to the Mexico Border", ""))
 ```
 
-# 2.4 Distance to Canada
 
-```{r}
+## Question 2.4 Distance to Canada
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -164,9 +176,11 @@ knitr::kable(city_can, caption = "The 5 Furthest USA Cities to the Canadian Bord
              col.names = c("City", "State", "Distance to Canadian Border", ""))
 ```
 
-# Question 3.1 Data
 
-```{r}
+## Question 3.1 Data
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -193,9 +207,12 @@ ggplot() +
        x = "",
        y = "")
 ```
-# 3.2 City distance from the border
 
-```{r}
+
+## Question 3.2 City distance from the border
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -228,9 +245,12 @@ ggplot() +
        x = "",
        y = "")
 ```
-# 3.3 city distance from nearest state
 
-```{r}
+
+## Question 3.3 city distance from nearest state
+
+
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)
@@ -263,9 +283,9 @@ ggplot() +
        y = "")
 ```
 
-# 3.4
+## Question 3.4
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(sf)
 library(units)

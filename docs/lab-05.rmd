@@ -1,13 +1,16 @@
 ---
-title: "Lab 05"
+title: "Lab 05: Raster Analysis"
 author: "[Jovany Cota](https://github.com/jovanycota)"
-subtitle: 'GEOG 176A'
+subtitle: 'GEOG 176A Summer Session B 2020'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     theme: journal
 ---
 
-# Question 1
+
+## Question 1
+
 
 ```{r, warning=FALSE, message=FALSE}
 library(raster)
@@ -35,7 +38,7 @@ bb = st_bbox(bbwgs)
 ```
 
 
-# Question 2
+## Question 2
 
 
 ```{r, warning=FALSE, message=FALSE}
@@ -75,7 +78,7 @@ The CRS is still WGS84 while the resolution remains the same at 30 x 30
 
 
 
-# Question 3
+## Question 3
 
 
 ```{r, warning=FALSE, message=FALSE}
@@ -106,7 +109,7 @@ plotRGB(r, r = 7, g = 6, b = 4, stretch = "hist")
 A color stretch helps to identify features within the image. For example, it can show vegetation, land, bodies of water, etc..
 
 
-# Question 4
+## Question 4
 
 
 ```{r, warning=FALSE, message=FALSE}
@@ -180,7 +183,9 @@ plot(stack_flood, col = c('white', 'blue'))
 - Describe the 5 images. How are they simular and where do they deviate?
 The five images all display the flooded area in their own way by highlighting important aspects of it and they all display the flooded area. They are different due to the type of data they choose to showcase alongside the flooded area.
 
-# Question 5
+
+## Question 5
+
 
 ```{r, warning=FALSE, message=FALSE}
 library(raster)
@@ -249,7 +254,8 @@ The dimensions tells us that the data was extracted using their extent. It also 
 
 
 
-# Question 6
+## Question 6
+
 
 ```{r, warning=FALSE, message=FALSE}
 library(raster)
