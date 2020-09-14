@@ -1,0 +1,91 @@
+---
+title: "Lab 06: Flood Risk in Mission Creek"
+author: "[Jovany Cota](https://github.com/jovanycota)"
+subtitle: 'GEOG 176A Summer Session B 2020'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: journal
+---
+
+```{r, message=FALSE, error=FALSE, warning=FALSE}
+library(sf)        # vector manipulation
+library(raster)    # raster manipulation
+library(whitebox)  # terrain analysis
+library(osmdata)   # OSM API
+library(elevatr)   # Elevation  Web Tiles
+library(tidyverse)
+library(units)
+library(fasterize)
+
+bound = read_sf('https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-11119750/basin') 
+
+elev = elevatr::get_elev_raster(bound, z = 13) %>% 
+  crop(bound)  
+
+writeRaster(elev, "../data/area-elev.tif", overwrite = TRUE)
+
+el = raster("../data/area-elev.tif")
+
+plot(el)
+
+# Buildings and river-network data
+
+# building
+
+bb = st_bbox(bound) %>% 
+  st_as_sfc() %>% 
+  st_as_sf() %>% 
+  st_transform(4326) 
+
+build = osmdata::opq(bb) %>% 
+  add_osm_feature(key = 'building') %>% 
+  osmdata_sf()
+
+bd = build$osm_polygons %>% 
+   dplyr::select(osm_id, name, building) 
+
+cent = st_centroid(bd) %>% 
+  st_transform(crs(bound))
+
+cent_bound = st_intersection(cent, bound)
+
+# stream
+
+stream = osmdata::opq(bb) %>% 
+  add_osm_feature(key = 'waterway', value = "stream") %>% 
+  osmdata_sf()
+
+poly = stream$osm_points %>% 
+  dplyr::select(osm_id) %>% 
+  st_combine() %>% 
+  st_cast('POLYGON')
+
+str = stream$osm_lines %>% 
+   dplyr::select(osm_id, name, waterway)
+
+str_bound = st_intersection(str, bb)
+
+plot(str_bound$geometry)
+# Terrain Analysis
+
+# Hillshade
+
+wbt_hillshade("../data/area-elev.tif", "../data/area-hillshade.tif")
+
+r = raster("../data/area-hillshade.tif")
+
+plot(r,  box = FALSE, axes = FALSE, col = gray.colors(256, alpha = .5), legend=FALSE) 
+
+plot(bound)
+plot(str_bound$geometry, add = TRUE, col = 'darkred')
+
+# Height Above Nearest Drainage
+
+# Creating the river raster 
+
+
+
+
+```
+

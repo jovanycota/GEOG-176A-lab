@@ -10,7 +10,7 @@ output:
 
 ## Question 1
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
@@ -49,7 +49,7 @@ knitr::kable(cumu, caption = "Most Cumulative Cases in CA Counties",
 
 
 ```
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
@@ -65,7 +65,7 @@ new_most_cases = info %>%
 knitr::kable(new_most_cases, caption = "Most New COVID-19 Cases from CA Counties",
              col.names = c("County", "New Cases"))
 ```
-```{r ,warning=FALSE, message=FALSE}
+```{r ,warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
@@ -79,7 +79,7 @@ covid_pop = covid_filter %>%
 knitr::kable(covid_pop, caption = "Counties with the Most Cumulative Cases Per Capita",
              col.names = c("County", "Cases", "Cases Per Capita"))
 ```
-```{r ,warning=FALSE, message=FALSE}
+```{r ,warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
@@ -94,7 +94,7 @@ most_cpc = covid_filter %>%
 knitr::kable(most_cpc, caption = "Counties with the Most New COVID-19 Cases Per Capita",
              col.names = c("County", "New Cases", "Cases Per Capita"))
 ```
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
@@ -118,7 +118,7 @@ Based on my findings, I found that Los Angeles had the most cumulative cases in 
 
 ## Question 2
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
@@ -144,7 +144,7 @@ specific_sates %>%
          subtitle = "COVID-19 Data: NY-Times")
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(zoo)
 
